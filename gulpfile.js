@@ -25,7 +25,7 @@ gulp.task("less", function() {
         .pipe(gulp.dest("css"))
 });
 
-
+// copies main dependencies to ./vendor folder
 gulp.task("copy-vendor", function(){
     // copies bootstrap
     gulp.src([
