@@ -4,6 +4,7 @@
 /dist
 /tmp
 /css
+/vendor
 
 # dependencies
 /node_modules
