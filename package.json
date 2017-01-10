@@ -2,6 +2,7 @@
   "name": "bootstrap-seed",
   "version": "0.0.1",
   "description": "Simple seed project for Bootstrap 3",
+  "repository": "https://github.com/simutaroman/bootstrap-seed.git",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
