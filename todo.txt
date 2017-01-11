@@ -1,6 +1,8 @@
+#T005 dev
+- add dev task
 
 #T004 clean
-- add gulp task to clean build directory
++ add gulp task to clean build directory
 
 #T003
 + add jshint task

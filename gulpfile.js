@@ -10,7 +10,9 @@ let jshint = require("gulp-jshint");
 let usemin = require("gulp-usemin");
 let minifyHtml = require("gulp-minify-html");
 let minifyCss = require("gulp-minify-css");
-var rev = require("gulp-rev");
+let rev = require("gulp-rev");
+let clean = require("gulp-clean");
+
 
 // Other dependencies
 let browserSync = require("browser-sync").create();
@@ -76,6 +78,11 @@ gulp.task("copy-vendor", function () {
         .pipe(gulp.dest("vendor/font-awesome"))
 });
 
+gulp.task("clean", function () {
+    gulp.src(`${buildname}`, { read: false })
+        .pipe(clean());
+});
+
 // copies all .min css and js files to build directory
 gulp.task("copyvendormin", ["copy-vendor"], function () {
     gulp.src("vendor/**/*.min.*")
@@ -83,7 +90,7 @@ gulp.task("copyvendormin", ["copy-vendor"], function () {
 });
 
 // minifies all
-gulp.task("usemin", ["copyvendormin"], function () {
+gulp.task("usemin", ["clean","copyvendormin"], function () {
     return gulp.src("./*html")
         .pipe(usemin({
             css: [cleanCSS({ compability: "ie8" }), rev()],
