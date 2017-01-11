@@ -7,6 +7,7 @@ let cleanCSS = require("gulp-clean-css");
 let rename = require("gulp-rename");
 let uglify = require("gulp-uglify");
 let browserSync = require("browser-sync").create();
+let jshint = require("gulp-jshint");
 
 let pkg = require("./package.json");
 
@@ -46,9 +47,16 @@ gulp.task("minify-custom-css", ["less"], function () {
 
 });
 
+// JS hint task
+gulp.task("jshint", function() {
+  gulp.src("js/*.js")
+    .pipe(jshint())
+    .pipe(jshint.reporter("default"));
+});
+
 // TODO: minify group of js files
 // minifies custom js file
-gulp.task("minify-custom-js", function () {
+gulp.task("minify-custom-js", ["jshint"], function () {
     return gulp.src(`js/${customname}.js`)
         .pipe(uglify())
         .pipe(header(devheader, { pkg: pkg }))
@@ -96,4 +104,4 @@ gulp.task("browserSync", function () {
     })
 })
 // runs everything
-gulp.task("default", ["browserSync", "less", "minify-custom-css", "minify-custom-js", "copy-vendor"]);
+gulp.task("default", ["less", "minify-custom-css", "minify-custom-js", "copy-vendor"]);

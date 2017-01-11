@@ -1,8 +1,13 @@
- 
-# T01
+
+#T003
++ add jshint task
+
+#T002
+- add watch task
+
+#T001
 - change index.html to link to unminified versions of js and css files
 - minify group of css files
 - minify group of js files
 
-#T02
-- add watch task
+

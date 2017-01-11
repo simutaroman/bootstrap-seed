@@ -3,5 +3,5 @@
 (function($){
     $("body").load(
         console.log("Hello, bootstapped world!")
-    )
-}(jQuery))
+    );
+}(jQuery));
