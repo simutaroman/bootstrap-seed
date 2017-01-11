@@ -1,13 +1,16 @@
 
+#T004 clean
+- add gulp task to clean build directory
+
 #T003
 + add jshint task
 
 #T002
 - add watch task
 
-#T001
-- change index.html to link to unminified versions of js and css files
-- minify group of css files
-- minify group of js files
+#T001 gulp-usemin
++ change index.html to link to unminified versions of js and css files
++ minify group of css files
++ minify group of js files
 
 

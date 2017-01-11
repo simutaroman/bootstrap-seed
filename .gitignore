@@ -5,7 +5,6 @@
 /tmp
 /css
 /vendor
-/js/*.min.js
 
 # dependencies
 /node_modules

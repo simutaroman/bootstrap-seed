@@ -1,17 +1,24 @@
 "use strict"
 
+// Gulp modules
 let gulp = require("gulp");
 let less = require("gulp-less");
 let header = require("gulp-header");
 let cleanCSS = require("gulp-clean-css");
-let rename = require("gulp-rename");
 let uglify = require("gulp-uglify");
-let browserSync = require("browser-sync").create();
 let jshint = require("gulp-jshint");
+let usemin = require("gulp-usemin");
+let minifyHtml = require("gulp-minify-html");
+let minifyCss = require("gulp-minify-css");
+var rev = require("gulp-rev");
 
+// Other dependencies
+let browserSync = require("browser-sync").create();
 let pkg = require("./package.json");
 
+// local variables
 let customname = "custom";
+let buildname = "dist"
 
 // Sets the header content
 var devheader = ["/*!\n",
@@ -34,39 +41,13 @@ gulp.task("less", function () {
         }))
 });
 
-// TODO: minify group of css files
-// minifies custom css file
-gulp.task("minify-custom-css", ["less"], function () {
-    return gulp.src(`css/${customname}.css`)
-        .pipe(cleanCSS({ compability: "ie8" }))
-        .pipe(rename({ suffix: ".min" }))
-        .pipe(gulp.dest("css"))
-        .pipe(browserSync.reload({
-            stream: true
-        }))
-
+// jshint task
+gulp.task("jshint", function () {
+    gulp.src("js/*.js")
+        .pipe(jshint())
+        .pipe(jshint.reporter("default"));
 });
 
-// JS hint task
-gulp.task("jshint", function() {
-  gulp.src("js/*.js")
-    .pipe(jshint())
-    .pipe(jshint.reporter("default"));
-});
-
-// TODO: minify group of js files
-// minifies custom js file
-gulp.task("minify-custom-js", ["jshint"], function () {
-    return gulp.src(`js/${customname}.js`)
-        .pipe(uglify())
-        .pipe(header(devheader, { pkg: pkg }))
-        .pipe(rename({ suffix: ".min" }))
-        .pipe(gulp.dest("js"))
-        .pipe(browserSync.reload({
-            stream: true
-        }))
-
-});
 
 // copies main dependencies to ./vendor folder
 gulp.task("copy-vendor", function () {
@@ -95,6 +76,25 @@ gulp.task("copy-vendor", function () {
         .pipe(gulp.dest("vendor/font-awesome"))
 });
 
+// copies all .min css and js files to build directory
+gulp.task("copyvendormin", ["copy-vendor"], function () {
+    gulp.src("vendor/**/*.min.*")
+        .pipe(gulp.dest(`${buildname}/vendor`));
+});
+
+// minifies all
+gulp.task("usemin", ["copyvendormin"], function () {
+    return gulp.src("./*html")
+        .pipe(usemin({
+            css: [cleanCSS({ compability: "ie8" }), rev()],
+            html: [minifyHtml({ empty: true })],
+            js: [uglify(), header(devheader, { pkg: pkg }), rev()],
+            inlinejs: [uglify()],
+            inlinecss: [minifyCss(), "concat"]
+        }))
+        .pipe(gulp.dest(`${buildname}/`));
+});
+
 // Configuring the browserSync task
 gulp.task("browserSync", function () {
     browserSync.init({
@@ -103,5 +103,6 @@ gulp.task("browserSync", function () {
         },
     })
 })
+
 // runs everything
-gulp.task("default", ["less", "minify-custom-css", "minify-custom-js", "copy-vendor"]);
+gulp.task("default", ["less", "jshint", "usemin"]);
