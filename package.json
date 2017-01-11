@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-seed",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple seed project for Bootstrap 3",
   "repository": "https://github.com/simutaroman/bootstrap-seed.git",
   "main": "index.html",
