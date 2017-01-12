@@ -2,6 +2,6 @@
 
 $(document).ready(
     function () {
-        console.log("Hello03");
+        console.log("Hello bootstrapped world");
     }
 );

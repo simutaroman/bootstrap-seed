@@ -18,7 +18,7 @@ let clean = require("gulp-clean");
 let browserSync = require("browser-sync").create();
 let pkg = require("./package.json");
 
-// local variables
+// Local variables
 let customname = "custom";
 let buildname = "dist"
 
@@ -43,7 +43,7 @@ gulp.task("less", function () {
         }))
 });
 
-// jshint task
+// Jshint task
 gulp.task("jshint", function () {
     gulp.src("js/*.js")
         .pipe(jshint())
@@ -51,7 +51,7 @@ gulp.task("jshint", function () {
 });
 
 
-// copies main dependencies to ./vendor folder
+// Copies main dependencies to ./vendor folder
 gulp.task("copy-vendor", function () {
     // copies bootstrap
     gulp.src([
@@ -78,18 +78,19 @@ gulp.task("copy-vendor", function () {
         .pipe(gulp.dest("vendor/font-awesome"))
 });
 
+// Cleans output directory
 gulp.task("clean", function () {
     gulp.src(`${buildname}`, { read: false })
         .pipe(clean());
 });
 
-// copies all .min css and js files to build directory
+// Copies all .min css and js files to build directory
 gulp.task("copyvendormin", ["copy-vendor"], function () {
     gulp.src("vendor/**/*.min.*")
         .pipe(gulp.dest(`${buildname}/vendor`));
 });
 
-// minifies all
+// Minifies all
 gulp.task("usemin", ["clean","copyvendormin"], function () {
     return gulp.src("./*html")
         .pipe(usemin({
@@ -106,10 +107,28 @@ gulp.task("usemin", ["clean","copyvendormin"], function () {
 gulp.task("browserSync", function () {
     browserSync.init({
         server: {
+            baseDir: `${buildname}/`
+        },
+    })
+})
+
+// Runs everything to make production copy
+gulp.task("default", ["less", "jshint", "usemin", "browserSync"]);
+
+
+// Configuring the browserSync for devtask
+gulp.task("browserSyncDev", function () {
+    browserSync.init({
+        server: {
             baseDir: ""
         },
     })
 })
 
-// runs everything
-gulp.task("default", ["less", "jshint", "usemin"]);
+// Runs develper mode
+gulp.task("dev", ["browserSyncDev", "less", "copy-vendor"], function() {
+    // reloads the browser whenever HTML, JS or LESS files changed
+    gulp.watch("less/*.less", ["less"], browserSync.reload);
+    gulp.watch("*.html", browserSync.reload);
+    gulp.watch("js/**/*.js", browserSync.reload);
+});

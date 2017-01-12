@@ -1,5 +1,8 @@
+#T006
+- consider minification to single files (min.css and min.js)
+
 #T005 dev
-- add dev task
++ add dev task
 
 #T004 clean
 + add gulp task to clean build directory
@@ -8,7 +11,7 @@
 + add jshint task
 
 #T002
-- add watch task
++ add watch task
 
 #T001 gulp-usemin
 + change index.html to link to unminified versions of js and css files
