@@ -1,5 +1,8 @@
+
+
 #T006
-- consider minification to single files (min.css and min.js)
+- consider minification to single files (min.css and min.js).
+DECLINED due authoring.
 
 #T005 dev
 + add dev task
