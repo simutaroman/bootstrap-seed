@@ -118,6 +118,7 @@ gulp.task("usemin", function () {
 // Configuring the browserSync task
 gulp.task("browserSync", function () {
     return browserSync.init({
+        port: 3005,
         server: {
             baseDir: `${buildname}/`
         },
@@ -139,6 +140,7 @@ gulp.task("default", function (callback) {
 // Configuring the browserSync for devtask
 gulp.task("browserSyncDev", function () {
     browserSync.init({
+        port: 3010,
         server: {
             baseDir: "./src"
         },
