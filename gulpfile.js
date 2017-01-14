@@ -126,7 +126,6 @@ gulp.task("browserSync", function () {
 })
 
 // Runs everything to make production copy
-//gulp.task("default", ["less", "jshint", "usemin", "browserSync"]);
 gulp.task("default", function (callback) {
     runSequence(["less", "jshint"],
         "copy-vendor",
@@ -151,6 +150,6 @@ gulp.task("browserSyncDev", function () {
 gulp.task("dev", ["browserSyncDev", "less", "copy-vendor"], function () {
     // reloads the browser whenever HTML, JS or LESS files changed
     gulp.watch("./src/less/*.less", ["less"], browserSync.reload);
-    gulp.watch("./srv/*.html", browserSync.reload);
+    gulp.watch("./src/*.html", browserSync.reload);
     gulp.watch("./src/js/**/*.js", browserSync.reload);
 });
