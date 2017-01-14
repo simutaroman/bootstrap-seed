@@ -1,4 +1,7 @@
-﻿T#007
+﻿T#008
++ move working files and folders to ./src dir
+
+T#007
 + synchronize the tasks (on fast pc build doesn't work)
 
 T#006

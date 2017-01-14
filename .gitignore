@@ -3,8 +3,8 @@
 # compiled output
 /dist
 /tmp
-/css
-/vendor
+src/css
+src/vendor
 
 # dependencies
 /node_modules

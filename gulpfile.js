@@ -35,10 +35,10 @@ var devheader = ["/*!\n",
 
 // Compiles LESS files from ./less into ./css
 gulp.task("less", function () {
-    return gulp.src(`less/${customname}.less`)
+    return gulp.src(`./src/less/${customname}.less`)
         .pipe(less())
         .pipe(header(devheader, { pkg: pkg }))
-        .pipe(gulp.dest("css"))
+        .pipe(gulp.dest("./src/css"))
         .pipe(browserSync.reload({
             stream: true
         }))
@@ -46,29 +46,34 @@ gulp.task("less", function () {
 
 // Jshint task
 gulp.task("jshint", function () {
-    return gulp.src("js/*.js")
+    return gulp.src("./src/js/*.js")
         .pipe(jshint())
         .pipe(jshint.reporter("default"));
 });
 
 
-// Copies main dependencies to ./vendor folder
-gulp.task("copy-vendor", function (callback) {
+gulp.task("copybootstrap", function () {
     // copies bootstrap
-    gulp.src([
+    return gulp.src([
         "node_modules/bootstrap/dist/**/*",
         "!**/npm.js", "!**/bootstrap-theme.*",
         "!**/*.map"
     ])
-        .pipe(gulp.dest("vendor/bootstrap"))
+        .pipe(gulp.dest("./src/vendor/bootstrap"))
+});
+
+gulp.task("copyjquery", function () {
     // copies jquery
-    gulp.src([
+    return gulp.src([
         "node_modules/jquery/dist/jquery.js",
         "node_modules/jquery/dist/jquery.min.js"
     ])
-        .pipe(gulp.dest("vendor/jquery"))
+        .pipe(gulp.dest("./src/vendor/jquery"))
+});
+
+gulp.task("copyfontawesome", function () {
     // copies font-awesome
-    gulp.src([
+    return gulp.src([
         "node_modules/font-awesome/**",
         "!node_modules/font-awesome/**/*.map",
         "!node_modules/font-awesome/.npmignore",
@@ -76,9 +81,12 @@ gulp.task("copy-vendor", function (callback) {
         "!node_modules/font-awesome/*.md",
         "!node_modules/font-awesome/*.json"
     ])
-        .pipe(gulp.dest("vendor/font-awesome"))
+        .pipe(gulp.dest("./src/vendor/font-awesome"))
+});
 
-    callback();
+// Copies main dependencies to ./vendor folder
+gulp.task("copy-vendor", function (callback) {
+    runSequence(["copybootstrap", "copyjquery", "copyfontawesome"], callback);
 });
 
 // Cleans output directory
@@ -88,14 +96,15 @@ gulp.task("clean", function () {
 });
 
 // Copies all .min css and js files to build directory
-gulp.task("copyvendormin", ["copy-vendor"], function () {
-    return gulp.src("vendor/**/*.min.*")
+gulp.task("copyvendormin", function (callback) {
+    return gulp.src("./src/vendor/**/*.min.*")
         .pipe(gulp.dest(`${buildname}/vendor`));
+    callback();
 });
 
 // Minifies all
-gulp.task("usemin", ["copyvendormin"], function () {
-    return gulp.src("./*html")
+gulp.task("usemin", function () {
+    return gulp.src("./src/*html")
         .pipe(usemin({
             css: [cleanCSS({ compability: "ie8" }), rev()],
             html: [minifyHtml({ empty: true })],
@@ -119,7 +128,9 @@ gulp.task("browserSync", function () {
 //gulp.task("default", ["less", "jshint", "usemin", "browserSync"]);
 gulp.task("default", function (callback) {
     runSequence(["less", "jshint"],
+        "copy-vendor",
         "clean",
+        "copyvendormin",
         "usemin",
         "browserSync",
         callback);
@@ -129,7 +140,7 @@ gulp.task("default", function (callback) {
 gulp.task("browserSyncDev", function () {
     browserSync.init({
         server: {
-            baseDir: ""
+            baseDir: "./src"
         },
     })
 })
@@ -137,7 +148,7 @@ gulp.task("browserSyncDev", function () {
 // Runs develper mode
 gulp.task("dev", ["browserSyncDev", "less", "copy-vendor"], function () {
     // reloads the browser whenever HTML, JS or LESS files changed
-    gulp.watch("less/*.less", ["less"], browserSync.reload);
-    gulp.watch("*.html", browserSync.reload);
-    gulp.watch("js/**/*.js", browserSync.reload);
+    gulp.watch("./src/less/*.less", ["less"], browserSync.reload);
+    gulp.watch("./srv/*.html", browserSync.reload);
+    gulp.watch("./src/js/**/*.js", browserSync.reload);
 });
