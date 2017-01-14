@@ -1,24 +1,2 @@
-
-
-#T006
-- consider minification to single files (min.css and min.js).
-DECLINED due authoring.
-
-#T005 dev
-+ add dev task
-
-#T004 clean
-+ add gulp task to clean build directory
-
-#T003
-+ add jshint task
-
-#T002
-+ add watch task
-
-#T001 gulp-usemin
-+ change index.html to link to unminified versions of js and css files
-+ minify group of css files
-+ minify group of js files
-
-
+T#008
+- move working files and folders to app dir

@@ -1,0 +1,25 @@
+﻿T#007
++ synchronize the tasks (on fast pc build doesn't work)
+
+T#006
+- consider minification to single files (min.css and min.js).
+DECLINED due authoring.
+
+T#005 dev
++ add dev task
+
+T#004 clean
++ add gulp task to clean build directory
+
+T#003
++ add jshint task
+
+T#002
++ add watch task
+
+T#001 gulp-usemin
++ change index.html to link to unminified versions of js and css files
++ minify group of css files
++ minify group of js files
+
+

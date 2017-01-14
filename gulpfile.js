@@ -12,6 +12,7 @@ let minifyHtml = require("gulp-minify-html");
 let minifyCss = require("gulp-minify-css");
 let rev = require("gulp-rev");
 let clean = require("gulp-clean");
+let runSequence = require('run-sequence');
 
 
 // Other dependencies
@@ -45,14 +46,14 @@ gulp.task("less", function () {
 
 // Jshint task
 gulp.task("jshint", function () {
-    gulp.src("js/*.js")
+    return gulp.src("js/*.js")
         .pipe(jshint())
         .pipe(jshint.reporter("default"));
 });
 
 
 // Copies main dependencies to ./vendor folder
-gulp.task("copy-vendor", function () {
+gulp.task("copy-vendor", function (callback) {
     // copies bootstrap
     gulp.src([
         "node_modules/bootstrap/dist/**/*",
@@ -76,22 +77,24 @@ gulp.task("copy-vendor", function () {
         "!node_modules/font-awesome/*.json"
     ])
         .pipe(gulp.dest("vendor/font-awesome"))
+
+    callback();
 });
 
 // Cleans output directory
 gulp.task("clean", function () {
-    gulp.src(`${buildname}`, { read: false })
+    return gulp.src(`${buildname}`, { read: false })
         .pipe(clean());
 });
 
 // Copies all .min css and js files to build directory
 gulp.task("copyvendormin", ["copy-vendor"], function () {
-    gulp.src("vendor/**/*.min.*")
+    return gulp.src("vendor/**/*.min.*")
         .pipe(gulp.dest(`${buildname}/vendor`));
 });
 
 // Minifies all
-gulp.task("usemin", ["clean","copyvendormin"], function () {
+gulp.task("usemin", ["copyvendormin"], function () {
     return gulp.src("./*html")
         .pipe(usemin({
             css: [cleanCSS({ compability: "ie8" }), rev()],
@@ -105,7 +108,7 @@ gulp.task("usemin", ["clean","copyvendormin"], function () {
 
 // Configuring the browserSync task
 gulp.task("browserSync", function () {
-    browserSync.init({
+    return browserSync.init({
         server: {
             baseDir: `${buildname}/`
         },
@@ -113,8 +116,14 @@ gulp.task("browserSync", function () {
 })
 
 // Runs everything to make production copy
-gulp.task("default", ["less", "jshint", "usemin", "browserSync"]);
-
+//gulp.task("default", ["less", "jshint", "usemin", "browserSync"]);
+gulp.task("default", function (callback) {
+    runSequence(["less", "jshint"],
+        "clean",
+        "usemin",
+        "browserSync",
+        callback);
+});
 
 // Configuring the browserSync for devtask
 gulp.task("browserSyncDev", function () {
@@ -126,7 +135,7 @@ gulp.task("browserSyncDev", function () {
 })
 
 // Runs develper mode
-gulp.task("dev", ["browserSyncDev", "less", "copy-vendor"], function() {
+gulp.task("dev", ["browserSyncDev", "less", "copy-vendor"], function () {
     // reloads the browser whenever HTML, JS or LESS files changed
     gulp.watch("less/*.less", ["less"], browserSync.reload);
     gulp.watch("*.html", browserSync.reload);
